@@ -17,18 +17,23 @@
 <body>
 
     <div class="container">
-        <h1>Blog Codepolitan</h1>
-        @foreach ($posts as $post)
-            <div class="card mb-3">
-                {{-- <img src="..." class="card-img-top" alt="..."> --}}
-                <div class="card-body">
-                    <h5 class="card-title">{{ $post[0] }} </h5>
-                    <p class="card-text">{{ $post[1] }}</p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    <a href="" class="btn btn-primary">Selengkapnya</a>
-                </div>
+        <div class="mt-4">
+            <div>
+                <h1>Blog Codepolitan</h1>
+                <a href="{{ url('/posts/create') }}" class="btn btn-primary">Tambah Postingan</a>
             </div>
-        @endforeach
+            @foreach ($posts as $post)
+                <div class="card mb-3 mt-4">
+                    {{-- <img src="..." class="card-img-top" alt="..."> --}}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $post[0] }} </h5>
+                        <p class="card-text">{{ $post[1] }}</p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        <a href="" class="btn btn-primary">Selengkapnya</a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
 
 
