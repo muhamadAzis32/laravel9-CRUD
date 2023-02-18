@@ -14,14 +14,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        $view_data = [
-            'posts' => [
-                ["Mengenal Laravel", "Ini adalah blog mengenai pengenalan laravel"],
-                ["Tentang Codepolitan", "Ini adalah blog tentang pengenalan codepolitan"],
-            ],
-        ];
-        // dd($view_data);
-        return view('posts.index', $view_data);
+        $posts = DB::table('posts')
+            ->select('title', 'content', 'id', 'created_at')
+            ->get();
+
+        return view('posts.index', ['posts' => $posts]);
     }
 
     /**
@@ -63,7 +60,12 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = DB::table('posts')
+            ->select('title', 'content', 'id', 'created_at')
+            ->where('id', $id)
+            ->first();
+
+        return view('posts.show', ['post' => $post]);
     }
 
     /**
@@ -74,7 +76,12 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = DB::table('posts')
+            ->select('title', 'content', 'id', 'created_at')
+            ->where('id', $id)
+            ->first();
+
+        return view('posts.edit', ['post' => $post]);
     }
 
     /**
@@ -86,7 +93,17 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $title = $request->input('title');
+        $content = $request->input('content');
+
+        DB::table('posts')
+            ->where('id', $id)
+            ->update([
+                'title' => $title,
+                'content' => $content,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+        return redirect("/posts/{$id}");
     }
 
     /**
@@ -97,6 +114,10 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('posts')
+            ->where('id', $id)
+            ->delete();
+
+        return redirect('/posts');
     }
 }
