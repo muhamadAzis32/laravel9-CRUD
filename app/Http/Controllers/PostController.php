@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -41,11 +40,9 @@ class PostController extends Controller
         $title = $request->input('title');
         $content = $request->input('content');
 
-        Post::insert([
+        Post::create([
             'title' => $title,
-            'content' => $content,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
+            'content' => $content
         ]);
 
         return redirect('/posts');
@@ -60,8 +57,14 @@ class PostController extends Controller
     public function show($id)
     {
         $post = Post::where('id', $id)->first();
+        $comments = $post->comments()->limit(2)->get();
+        $total_comments = $post->total_comments();
 
-        return view('posts.show', ['post' => $post]);
+        return view('posts.show', [
+            'post' => $post,
+            'comments' => $comments,
+            'total_comments' => $total_comments
+        ]);
     }
 
     /**
