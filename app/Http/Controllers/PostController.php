@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -14,8 +15,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::Active()->get();
+        if (!Auth::check()) {
+            return redirect('login');
+        }
 
+        $posts = Post::Active()->get();
         return view('posts.index', ['posts' => $posts]);
     }
 
@@ -26,6 +30,10 @@ class PostController extends Controller
      */
     public function create()
     {
+        if (!Auth::check()) {
+            return redirect('login');
+        }
+
         return view('posts.create');
     }
 
@@ -42,7 +50,7 @@ class PostController extends Controller
 
         Post::create([
             'title' => $title,
-            'content' => $content
+            'content' => $content,
         ]);
 
         return redirect('/posts');
@@ -56,6 +64,11 @@ class PostController extends Controller
      */
     public function show($id)
     {
+
+        if (!Auth::check()) {
+            return redirect('login');
+        }
+
         $post = Post::where('id', $id)->first();
         $comments = $post->comments()->limit(2)->get();
         $total_comments = $post->total_comments();
@@ -63,7 +76,7 @@ class PostController extends Controller
         return view('posts.show', [
             'post' => $post,
             'comments' => $comments,
-            'total_comments' => $total_comments
+            'total_comments' => $total_comments,
         ]);
     }
 
@@ -75,6 +88,10 @@ class PostController extends Controller
      */
     public function edit($id)
     {
+        if (!Auth::check()) {
+            return redirect('login');
+        }
+
         $post = Post::where('id', $id)->first();
 
         return view('posts.edit', ['post' => $post]);

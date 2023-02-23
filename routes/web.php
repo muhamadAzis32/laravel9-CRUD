@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 
 /*
@@ -18,12 +19,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-route::get('/hello', function () {
-    echo "hallo bro";
-});
 
+Route::get('login', [AuthController::class, 'login']);
+Route::post('login', [AuthController::class, 'authenticate']);
+Route::get('logout', [AuthController::class, 'logout']);
+Route::get('register', [AuthController::class, 'register']);
+Route::post('register', [AuthController::class, 'daftar']);
 
-// Route::resource('posts', PostController::class);
 
 Route::get('/posts', [PostController::class, 'index']);
 Route::get('/posts/create', [PostController::class, 'create']);
