@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,9 +15,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = DB::table('posts')
-            ->select('title', 'content', 'id', 'created_at')
-            ->get();
+        $posts = Post::Active()->get();
 
         return view('posts.index', ['posts' => $posts]);
     }
@@ -42,7 +41,7 @@ class PostController extends Controller
         $title = $request->input('title');
         $content = $request->input('content');
 
-        DB::table('posts')->insert([
+        Post::insert([
             'title' => $title,
             'content' => $content,
             'created_at' => date('Y-m-d H:i:s'),
@@ -60,10 +59,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = DB::table('posts')
-            ->select('title', 'content', 'id', 'created_at')
-            ->where('id', $id)
-            ->first();
+        $post = Post::where('id', $id)->first();
 
         return view('posts.show', ['post' => $post]);
     }
@@ -76,10 +72,7 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        $post = DB::table('posts')
-            ->select('title', 'content', 'id', 'created_at')
-            ->where('id', $id)
-            ->first();
+        $post = Post::where('id', $id)->first();
 
         return view('posts.edit', ['post' => $post]);
     }
@@ -96,8 +89,7 @@ class PostController extends Controller
         $title = $request->input('title');
         $content = $request->input('content');
 
-        DB::table('posts')
-            ->where('id', $id)
+        Post::where('id', $id)
             ->update([
                 'title' => $title,
                 'content' => $content,
@@ -114,9 +106,7 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('posts')
-            ->where('id', $id)
-            ->delete();
+        Post::where('id', $id)->delete();
 
         return redirect('/posts');
     }
